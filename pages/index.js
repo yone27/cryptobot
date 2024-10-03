@@ -2,7 +2,24 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 // INTERNAL IMPORT
-import { AddTokenPair, Header, Home, Login, Networks, Preloader, Price, Profile, Search, Setting, SideBar, Signup, TopExchangeTokens, TradeTokens, Trading } from "../components";
+import {
+  AddNetwork,
+  AddTokenPair,
+  Header,
+  Home,
+  Login,
+  Networks,
+  Preloader,
+  Price,
+  Profile,
+  Search,
+  Setting,
+  SideBar,
+  Signup,
+  TopExchangeTokens,
+  TradeTokens,
+  Trading
+} from "../components";
 import { CONTEXT } from "../context/context";
 import axios from "axios";
 
@@ -32,10 +49,10 @@ const index = () => {
           notifyError={notifyError}
           notifySuccess={notifySuccess}
         />
-      ) }
+      )}
 
-      {activeComponent == "Login" ? (
-        <Login
+      {activeComponent === "Login" ? (
+        <Signup
           setActiveComponent={setActiveComponent}
           axios={axios}
           notifyError={notifyError}
@@ -49,30 +66,31 @@ const index = () => {
               networkName={networkName}
               setActiveComponent={setActiveComponent}
             />
-            <SideBar 
-          setActiveComponent={setActiveComponent}
-            />
-            {
-              activeComponent === "Home" ? (
-                <Home />
-              ): activeComponent === "Trade Tokens" ? (
-                <TradeTokens />
-              ): activeComponent === "Top Echange Tokens" ? (
-                <TopExchangeTokens />
-              ): activeComponent === "Networks" ? (
-                <Networks networkName={networkName} />
-              ): activeComponent === "Trading" ? (
-                <Trading axios={axios}  /> 
-              ): activeComponent === "Pricing" ? (
-                <Price />
-              ): activeComponent === "Profile" ? (
-                <Profile setActiveComponent={setActiveComponent} />
-              ): activeComponent === "Setting" ? (
-                <Setting />
-              ): activeComponent === "Add Token Pair" ? (
-                <AddTokenPair /> 
-              ): null
-            }
+            <SideBar setActiveComponent={setActiveComponent} />
+            {activeComponent === "Home" ? (
+              <Home />
+            ) : activeComponent === "Trade Tokens" ? (
+              <TradeTokens />
+            ) : activeComponent === "Top Exchange Tokens" ? (
+              <TopExchangeTokens />
+            ) : activeComponent === "Networks" ? (
+              <Networks
+                networkName={networkName}
+                setNetworkName={setNetworkName}
+              />
+            ) : activeComponent === "Add Network" ? (
+              <AddNetwork axios={axios} />
+            ) : activeComponent === "Trading" ? (
+              <Trading axios={axios} />
+            ) : activeComponent === "Pricing" ? (
+              <Price />
+            ) : activeComponent === "Profile" ? (
+              <Profile setActiveComponent={setActiveComponent} />
+            ) : activeComponent === "Setting" ? (
+              <Setting />
+            ) : activeComponent === "Add Token Pair" ? (
+              <AddTokenPair />
+            ) : null}
           </div>
         </div>
       )}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const SidebarComponent = ({
   array,
@@ -11,9 +12,13 @@ const SidebarComponent = ({
     <h2 className='group__title'>{title}</h2>
     <ul className='group__list'>
       {array.map((menu, index) => (
-        <li key={index} onClick={() => setActiveComponent(menu.menu)}>
+        <li key={index} onClick={() => {
+          setActiveComponent(menu.menu)
+          setActive(menu.menu)
+          }}>
           <a
-            onClick={() => setActive(menu.menu)}
+            href="#"
+            // to={`/${menu.link}`} 
             className={`fn__tooltip ${
               active === menu.menu && "active"
             } menu__item`}
@@ -36,40 +41,49 @@ const SideBar = ({ setActiveComponent }) => {
 
   const array1 = [
     {
+      link: "/home",
       menu: "Home",
       icon: "img/lighticon/light-14.png"
     },
     {
-      menu: "Trade tokens",
+      link: "/trade-tokens",
+      menu: "Trade Tokens",
       icon: "img/lighticon/light-17.png"
     },
     {
-      menu: "Top Exchange tokens",
+      link: "/top-exchange-tokens",
+      menu: "Top Exchange Tokens",
       icon: "img/lighticon/light-7.png"
     },
     {
+      link: "/networks",
       menu: "Networks",
       icon: "img/lighticon/light-15.png"
     }
   ];
   const array2 = [
     {
+      link: "/add-network",
       menu: "Add Network",
       icon: "img/lighticon/light-10.png"
     },
     {
+      link: "/trading",
       menu: "Trading",
       icon: "img/lighticon/light-6.png"
     },
     {
+      link: "/pricing",
       menu: "Pricing",
       icon: "img/lighticon/light-16.png"
     },
     {
+      link: "/profile",
       menu: "Profile",
       icon: "img/lighticon/light-4.png"
     },
     {
+      link: "/add-token-pair",
       menu: "Add Token Pair",
       icon: "img/lighticon/light-19.png"
     }
@@ -144,9 +158,13 @@ const SideBar = ({ setActiveComponent }) => {
                 title='Log out'
               >
                 <span className='icon'>
-                  <img src='img/lighticon/light-10.png' alt='logo' className="fn__svg" />
+                  <img
+                    src='img/lighticon/light-10.png'
+                    alt='logo'
+                    className='fn__svg'
+                  />
                 </span>
-                <span className="text">Log out</span>
+                <span className='text'>Log out</span>
               </a>
             </li>
           </ul>

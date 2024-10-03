@@ -12,7 +12,8 @@ export const PROVIDER = ({ children }) => {
 
   const LOAD_INITIAL_DATA = async () => {
     try {
-      const URL = "https://gateway.thegraph.com/api/f06130247d888e090911b1e1bdaaf322/subgraphs/name/uniswap/uniswap-v3";
+      // const URL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+      const URL = "https://gateway.thegraph.com/api/f06130247d888e090911b1e1bdaaf322/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV";
       const query = `
         {
           tokens(orderBy: volumeUSD, orderDirection: desc, first:20){
@@ -37,8 +38,7 @@ export const PROVIDER = ({ children }) => {
           'Authorization': `Bearer f06130247d888e090911b1e1bdaaf322`
         }
       });
-      // setTopTokens(axiosData.data.data.tokens);
-      console.log(axiosData);
+      setTopTokens(axiosData.data.data.tokens);
     } catch (error) {
       console.log(error)
     }
@@ -67,7 +67,8 @@ export const PROVIDER = ({ children }) => {
     <CONTEXT.Provider
       value={{
         TRADING_BOT,
-        trading
+        trading,
+        topTokens
       }}
     >
       {children}
