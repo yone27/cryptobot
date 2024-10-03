@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
+import { notifyError, notifySuccess } from "../../utils";
 
 const AddTokenPair = () => {
-  // NOTIFICATION
-  const notifyError = (msg) => toast.error(msg, { duration: 2000 });
-  const notifySuccess = (msg) => toast.success(msg, { duration: 2000 });
   const [token, setToken] = useState({
     token1: "",
     token2: "",
