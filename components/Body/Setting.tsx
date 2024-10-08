@@ -1,51 +1,38 @@
-import axios from "axios";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { handleFieldChange, notifyError, notifySuccess } from "../../utils";
+import React, { useCallback, useEffect, useState } from 'react'
+import { handleFieldChange, notifyError, notifySuccess } from '../../utils';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
-const AddNetwork = () => {
+const Setting = () => {
   const [displayImg, setDisplayImg] = useState("");
-  const [network, setNetwork] = useState({
-    networkName: "",
-    rpcUrl: "",
-    apiKey: "",
+  const [userDetails, setUserDetails] = useState({})
+  const [user, setUser] = useState({
+    name: "",
+    username: "",
     walletAddress: "",
     privateKey: "",
-    image: displayImg
+    image: displayImg,
+    biography: ""
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userProfile"))
+    setUserDetails(user)
+  }, [])
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const requiredFields = [
-      "networkName",
-      "rpcUrl",
-      "apiKey",
-      "walletAddress",
-      "privateKey",
-      "image"
-    ];
-    const temporalNetwork = Object.fromEntries(
-      requiredFields.map((field) => [field, network[field]])
+    const requiredFields = ["name", "username", "walletAddress", "biography", "privateKey", "image"];
+    const temporalUser = Object.fromEntries(
+      requiredFields.map((field) => [field, user[field]])
     );
 
-    if (Object.values(temporalNetwork).some((value) => value === "")) {
-      return notifyError("Please provide all data.");
-    }
+    if (Object.values(temporalUser).some((value) => value === ""))
+      return notifyError("Please provide all data.")
 
-    let networkArray = [];
-    const networkLists = localStorage.getItem("setNetworks");
-    if (networkLists) {
-      networkArray = JSON.parse(localStorage.getItem("setNetworks"));
-      networkArray.push(network);
-      localStorage.setItem("setNetworks", JSON.stringify(networkArray));
-      notifySuccess("Network add successfully");
-      // window.location.reload()
-    } else {
-      networkArray.push(network);
-      localStorage.setItem("setNetworks", JSON.stringify(networkArray));
-      notifySuccess("Network add successfully");
-    }
+    localStorage.setItem("userProfile", JSON.stringify(user));
+    notifySuccess("Profile updated successfully");
   };
 
   const uploadToInfure = async (file) => {
@@ -70,8 +57,7 @@ const AddNetwork = () => {
         });
 
         const ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
-        // setNetwork();
-        setNetwork((prevState) => ({
+        setUser((prevState) => ({
           ...prevState,
           image: ImgHash
         }));
@@ -150,7 +136,7 @@ const AddNetwork = () => {
                           type='text'
                           className='input'
                           placeholder='network'
-                          onChange={(e) => handleFieldChange(e, setNetwork)}
+                          onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
                     </div>
@@ -166,7 +152,7 @@ const AddNetwork = () => {
                           type='text'
                           className='input'
                           placeholder='RPC URL'
-                          onChange={(e) => handleFieldChange(e, setNetwork)}
+                          onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
                     </div>
@@ -182,7 +168,7 @@ const AddNetwork = () => {
                           type='text'
                           className='input'
                           placeholder='API KEY'
-                          onChange={(e) => handleFieldChange(e, setNetwork)}
+                          onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
                     </div>
@@ -198,7 +184,7 @@ const AddNetwork = () => {
                           type='text'
                           className='input'
                           placeholder='Wallet Address'
-                          onChange={(e) => handleFieldChange(e, setNetwork)}
+                          onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
                     </div>
@@ -214,7 +200,7 @@ const AddNetwork = () => {
                           type='text'
                           className='input'
                           placeholder='Private Key'
-                          onChange={(e) => handleFieldChange(e, setNetwork)}
+                          onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
                     </div>
@@ -234,7 +220,7 @@ const AddNetwork = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddNetwork;
+export default Setting
