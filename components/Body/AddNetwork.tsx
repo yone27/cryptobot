@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from "react";
-import { handleFieldChange, notifyError, notifySuccess } from "../../utils";
 import axios from "axios";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { handleFieldChange, notifyError, notifySuccess } from "../../utils";
 
 const AddNetwork = () => {
   const [displayImg, setDisplayImg] = useState("");
@@ -61,7 +61,7 @@ const AddNetwork = () => {
           method: "post",
           url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
           data: formData,
-          maxBodyLength: "Infinity",
+          maxBodyLength: Infinity,
           headers: {
             pinata_api_key: "004da6b7324280d4181d",
             pinata_secret_api_key:
@@ -71,7 +71,7 @@ const AddNetwork = () => {
         });
 
         const ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
-        setNetwork();
+        // setNetwork();
         setNetwork((prevState) => ({
           ...prevState,
           image: ImgHash
