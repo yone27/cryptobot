@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-interface InterfaceUserDetails {
+export interface InterfaceUserDetails {
   image: string,
   name: string,
   username: string,

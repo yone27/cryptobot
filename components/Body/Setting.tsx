@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { handleFieldChange, notifyError, notifySuccess } from '../../utils';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
+import { InterfaceUserDetails } from './Profile';
 
 const Setting = () => {
   const [displayImg, setDisplayImg] = useState("");
-  const [userDetails, setUserDetails] = useState({})
+  const [userDetails, setUserDetails] = useState<InterfaceUserDetails>()
   const [user, setUser] = useState({
     name: "",
     username: "",
@@ -127,15 +128,15 @@ const Setting = () => {
                   <div className='settings__right'>
                     <div className='item'>
                       <label htmlFor='data' className='input_label'>
-                        Network name
+                        Name
                       </label>
 
                       <div className='input_item'>
                         <input
-                          name='networkName'
+                          name='name'
                           type='text'
                           className='input'
-                          placeholder='network'
+                          placeholder={userDetails?.name}
                           onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
@@ -143,31 +144,15 @@ const Setting = () => {
 
                     <div className='item'>
                       <label htmlFor='data' className='input_label'>
-                        Alchemy provider
+                        Username
                       </label>
 
                       <div className='input_item'>
                         <input
-                          name='rpcUrl'
+                          name='username'
                           type='text'
                           className='input'
-                          placeholder='RPC URL'
-                          onChange={(e) => handleFieldChange(e, setUser)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className='item'>
-                      <label htmlFor='data' className='input_label'>
-                        Alchemy Api Key
-                      </label>
-
-                      <div className='input_item'>
-                        <input
-                          name='apiKey'
-                          type='text'
-                          className='input'
-                          placeholder='API KEY'
+                          placeholder={userDetails?.username}
                           onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
@@ -183,7 +168,7 @@ const Setting = () => {
                           name='walletAddress'
                           type='text'
                           className='input'
-                          placeholder='Wallet Address'
+                          placeholder={userDetails?.walletAddress}
                           onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
@@ -191,7 +176,7 @@ const Setting = () => {
 
                     <div className='item'>
                       <label htmlFor='data' className='input_label'>
-                        Private Key
+                        Private key
                       </label>
 
                       <div className='input_item'>
@@ -199,7 +184,23 @@ const Setting = () => {
                           name='privateKey'
                           type='text'
                           className='input'
-                          placeholder='Private Key'
+                          placeholder={userDetails?.privateKey}
+                          onChange={(e) => handleFieldChange(e, setUser)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className='item'>
+                      <label htmlFor='data' className='input_label'>
+                        Biography
+                      </label>
+
+                      <div className='input_item'>
+                        <input
+                          name='biography'
+                          type='text'
+                          className='input'
+                          placeholder={userDetails?.biography}
                           onChange={(e) => handleFieldChange(e, setUser)}
                         />
                       </div>
@@ -208,7 +209,7 @@ const Setting = () => {
                     <div className='item'>
                       <div>
                         <button className='techwave_fn_button'>
-                          Save Network
+                          Save profile
                         </button>
                       </div>
                     </div>
