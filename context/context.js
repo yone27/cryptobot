@@ -88,7 +88,7 @@ export const PROVIDER = ({ children }) => {
   const sellTokens = async ({
     tokenAddress1,
     tokenAddress2,
-    fe,
+    fee,
     userAddress,
     buyAmount,
     router,
@@ -117,14 +117,94 @@ export const PROVIDER = ({ children }) => {
         sellAmount,
         0,
         0
-      ])
-      await tx.wait()
-      console.log(tx.hash)
+      ]);
+      await tx.wait();
+      console.log(tx.hash);
+      return tx.hash;
     } catch (error) {}
   };
 
-  const trading = async () => {
+  const trading = async (activeNetwork, tradeToken) => {
+    setLoader(true);
     try {
+      // web
+      const provider = new ethers.JsonRpcProvider(
+        `${activeNetwork.rpcUrl}${activeNetwork.apiKey}`
+      );
+      const wallet = new ethers.Wallet(`0x${activeNetwork.privateKey}`);
+
+      const buyAmount = ethers.parseUnits(tradeToken.buyAmount, "ether");
+      const targetPrice = BigInt(tradeToken.targetPrice);
+      const targetAmountOut = buyAmount * targetPrice;
+      const sellAmount = buyAmount / targetPrice;
+
+      const account = wallet.connect(provider);
+      const token = TOKEN(account, tradeToken.tokenAddress2);
+      const router = ROUTER(account);
+      const quoter = QUOTER(account);
+
+      // CHECK PRICE BEFORE TRADE
+      const amountOut = await quoter.quoteExactInputSingle(
+        tradeToken.tokenAddress1,
+        tradeToken.tokenAddress2,
+        tradeToken.fee * 1,
+        buyAmount,
+        0
+      );
+
+      console.log(amountOut);
+      console.log(`Current exchange rate: ${amountOut.toString()}`);
+      console.log(`Target exchange rate: ${targetAmountOut.toString()}`);
+
+      let transactionHash;
+
+      if (amountOut < targetAmountOut) {
+        transactionHash = await buyAmount(
+          tradeToken.tokenAddress1,
+          tradeToken.tokenAddress2,
+          tradeToken.fee * 1,
+          wallet.addres,
+          buyAmount,
+          router
+        );
+      }
+
+      const userAddress = activeNetwork.walletAddress
+      if(amountOut > targetAmountOut) {
+        transactionHash = await sellTokens(
+          tradeToken.tokenAddress1,
+          tradeToken.tokenAddress2,
+          tradeToken.fee * 1,
+          userAddress,
+          buyAmount,
+          router,
+          sellAmount,
+          account,
+        )
+      }
+
+      // STORING DATA
+      const liveTransaction = {
+        currentRate: `${amountOut.toString()}`,
+        targetRate: `${targetAmountOut.toString()}`,
+        transactionHash: transactionHash,
+      }
+
+      let transactionArray = []
+
+      const listTransaction = localStorage.getItem("LIVE_TRANSACTION")
+      if(listTransaction) {
+        transactionArray = JSON.parse(localStorage.getItem("LIVE_TRANSACTION"))
+        transactionArray.push(liveTransaction)
+        localStorage.setItem("LIVE_TRANSACTION", JSON.stringify(transactionArray))
+      }else{
+        transactionArray.push(liveTransaction)
+        localStorage.setItem("LIVE_TRANSACTION", JSON.stringify(transactionArray))
+      }
+
+      setTradingCount(transactionArray.length + 1)
+      console.log(transactionArray)
+      setLoader(false)
     } catch (error) {}
   };
 
@@ -132,8 +212,13 @@ export const PROVIDER = ({ children }) => {
     <CONTEXT.Provider
       value={{
         TRADING_BOT,
+        topTokens,
         trading,
-        topTokens
+        tradingCount,
+        length,
+        setTradingCount,
+        setLoader,
+        loader 
       }}
     >
       {children}

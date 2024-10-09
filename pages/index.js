@@ -20,22 +20,14 @@ import {
   TradeTokens,
   Trading
 } from "../components";
-import { CONTEXT } from "../context/context";
-import axios from "axios";
 
 const index = () => {
-  const { TRADING_BOT } = useContext(CONTEXT);
-
   const [activeComponent, setActiveComponent] = useState("Home");
   const [membershipTYpe, setMembershipTYpe] = useState("Premiun");
   const [authBackEndId, setAuthBackEndId] = useState("");
 
   const [networks, setNetworks] = useState({});
   const [networkName, setNetworkName] = useState("");
-
-  // NOTIFICATION
-  const notifyError = (msg) => toast.error(msg, { duration: 2000 });
-  const notifySuccess = (msg) => toast.success(msg, { duration: 2000 });
 
   return (
     <div>
@@ -44,19 +36,13 @@ const index = () => {
 
       {activeComponent === "Signup" && (
         <Signup
-          axios={axios}
           setActiveComponent={setActiveComponent}
-          notifyError={notifyError}
-          notifySuccess={notifySuccess}
         />
       )}
 
       {activeComponent === "Login" ? (
         <Signup
           setActiveComponent={setActiveComponent}
-          axios={axios}
-          notifyError={notifyError}
-          notifySuccess={notifySuccess}
         />
       ) : (
         <div className='techwave_fn_wrapper'>
@@ -79,9 +65,9 @@ const index = () => {
                 setNetworkName={setNetworkName}
               />
             ) : activeComponent === "Add Network" ? (
-              <AddNetwork axios={axios} />
+              <AddNetwork />
             ) : activeComponent === "Trading" ? (
-              <Trading axios={axios} />
+              <Trading setActiveComponent={setActiveComponent} />
             ) : activeComponent === "Pricing" ? (
               <Price />
             ) : activeComponent === "Profile" ? (

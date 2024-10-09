@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { notifyError, notifySuccess } from "../../utils";
 
-const Signup = ({ axios, setActiveComponent, notifyError, notifySuccess }) => {
+const Signup = ({ setActiveComponent }) => {
   const [user, setUser] = useState({
     name: "",
     email: "",
