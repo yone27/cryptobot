@@ -41,7 +41,7 @@ const Trading = ({ setActiveComponent }) => {
   const [tradeToken, setTradeToken] = useState<InterfaceToken>()
   const [active, setActive] = useState(false)
   const [liveTransaction, setLiveTransaction] = useState([])
-  const [userMembership, setUserMembership] = useState()
+  const [userMembership, setUserMembership] = useState<string>()
 
   const tradeFrequency = 1000
 
@@ -49,7 +49,7 @@ const Trading = ({ setActiveComponent }) => {
     const tokenLists = JSON.parse(localStorage.getItem("setTokens"))
     const active = JSON.parse(localStorage.getItem("activeNetwork"))
     const tokenPair = JSON.parse(localStorage.getItem("tokenPair"))
-    const user = JSON.parse(localStorage.getItem("USER_MEMBERSHIP"))
+    const user = localStorage.getItem("USER_MEMBERSHIP")
 
     setUserMembership(user)
     setActiveNetwork(active)
@@ -95,7 +95,7 @@ const Trading = ({ setActiveComponent }) => {
             <div className="techwave_fn_user_profile">
               <div className="user__profile">
                 <div className="user_aver">
-                  <img src={activeNetwork?.image || "img/crupto.png"} alt="" />
+                  <img src={activeNetwork?.image || "img/crypto.png"} alt="" />
                 </div>
 
                 <div className="user_details new_hide">
@@ -181,7 +181,6 @@ const Trading = ({ setActiveComponent }) => {
                   </p>
                 </div>
               </div>
-
               <div>
                 {
                   userMembership !== "notMember" ? (
@@ -207,11 +206,11 @@ const Trading = ({ setActiveComponent }) => {
 
           <div className="techwave_fn_pricing">
             <div className="container">
-              <div className="pricing_tabs">
+              <div className="pricing__tabs">
                 <div className="pricing__tab active">
                   {/* mobile */}
                   {
-                    liveTransaction == null ? (
+                    !liveTransaction == null ? (
                       ""
                     ) : (
                       <div className="fn__mobile_pricing">
@@ -220,8 +219,67 @@ const Trading = ({ setActiveComponent }) => {
                             <div className="pricing__item__heading">
                               <h2 className="title">Live transaction...</h2>
                             </div>
+                            {
+                              liveTransaction?.map((transaction, index) => (
+                                <div key={index} className='pricing__item_list'>
+                                  <div className="pricing__item_list_item">
+                                    <h4 className="title">
+                                      {index + 1}. T_Amt:
+                                      {transaction.targetRate}
+                                    </h4>
+                                    <p className='desc'>
+                                    C_Amt: {transaction.currentRate}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))
+                            }
                           </div>
                         </div>
+                      </div>
+                    )
+                  }
+
+                  {
+                    liveTransaction == null ? (
+                      ""
+                    ) : (
+                      <div className="pricing__content">
+                        <div className="pricing__heading">
+                          <div className="item">
+                            <span className="title">Live transaction...</span>
+                          </div>
+                          <div className="item wide"></div>
+                        </div>
+
+                        {
+                          liveTransaction?.map((transation, index) => (
+                            <div key={index} className='pricing__fields'>
+                              <div className="new_flex">
+                                <div className="item_col">
+                                  <span className="heading_text">
+                                    {index + 1} T_Amount:
+                                    {transation.targetRate}
+                                  </span>
+                                </div>
+                                <div className="item_col">
+                                  <span className="option_text">
+                                    {index + 1} C_Amount:
+                                    {transation.currentRate}
+                                  </span>
+                                </div>
+                                <div className="item_col">
+                                  <span className="option_text" onClick={() => navigator.clipboard.writeText(transation.transactionHash)}>
+                                    {index + 1} Hash:
+                                    {transation.transactionHash}
+                                    <FaRegCopy />
+                                  </span>
+                                </div>
+                              </div>
+
+                            </div>
+                          ))
+                        }
                       </div>
                     )
                   }
